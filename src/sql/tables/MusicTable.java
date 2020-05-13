@@ -37,52 +37,55 @@ public class MusicTable extends BaseTable implements Table {
 
     // вывод информации
     public void printAll() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM Musics");
-        while (resultSet.next()) {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Musics");
 
-            int id = resultSet.getInt(1);
-            String name = resultSet.getString(2);
-            String artist = resultSet.getString(3);
-            Date date = resultSet.getDate(4);
-            int listPrice = resultSet.getInt(5);
-            int price = resultSet.getInt(6);
-            int version = resultSet.getInt(7);
-            System.out.println("ID: " + id + " Name: " + name + " Artist: " + artist + " Date: " + date +
-                    " ListPrice: " + listPrice + " Price: " + price + " Version: " + version);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                String artist = resultSet.getString(3);
+                Date date = resultSet.getDate(4);
+                int listPrice = resultSet.getInt(5);
+                int price = resultSet.getInt(6);
+                int version = resultSet.getInt(7);
+                System.out.println("ID: " + id + " Name: " + name + " Artist: " + artist + " Date: " + date +
+                        " ListPrice: " + listPrice + " Price: " + price + " Version: " + version);
+            }
         }
     }
 
     // поиск музыки по ID
     public MusicModel search(int inputID) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM Musics WHERE ID =" + inputID);
-        MusicModel model = new MusicModel();
-        while (resultSet.next()) {
+        try (Statement statement = connection.createStatement()) {
 
-            int id = resultSet.getInt(1);
-            String title = resultSet.getString(2);
-            String artist = resultSet.getString(3);
-            Date date = resultSet.getDate(4);
-            int listPrice = resultSet.getInt(5);
-            int price = resultSet.getInt(6);
-            int version = resultSet.getInt(7);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Musics WHERE ID =" + inputID);
+            MusicModel model = new MusicModel();
 
-            model.setName(title);
-            model.setArtist(artist);
-            model.setDate(date.toString());
-            model.setListPrice(listPrice);
-            model.setPrice(price);
-            model.setVersion(version);
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String artist = resultSet.getString(3);
+                Date date = resultSet.getDate(4);
+                int listPrice = resultSet.getInt(5);
+                int price = resultSet.getInt(6);
+                int version = resultSet.getInt(7);
+
+                model.setName(title);
+                model.setArtist(artist);
+                model.setDate(date.toString());
+                model.setListPrice(listPrice);
+                model.setPrice(price);
+                model.setVersion(version);
+            }
+            return model;
         }
-        return model;
     }
 
     // удаление по ID
     public void delete(int inputID) throws SQLException {
-        Statement statement = connection.createStatement();
-        int temp = statement.executeUpdate("DELETE FROM Musics WHERE Id = " + inputID);
-
-        System.out.println("Delete: " + temp);
+        try (Statement statement = connection.createStatement()) {
+            int temp = statement.executeUpdate("DELETE FROM Musics WHERE Id = " + inputID);
+            System.out.println("Delete: " + temp);
+        }
     }
 }

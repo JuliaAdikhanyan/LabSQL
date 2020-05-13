@@ -33,15 +33,12 @@ public class BaseTable implements Closeable {
 
     // описание состояния базы данных
     void executeSQLStatement(String sql, String description) throws SQLException {
-
-        reopen();
-        // Statement создаётся для выполнения команд базы данных
-        Statement statement = connection.createStatement();
-        statement.execute(sql); // выполнение Statement
-        statement.close();      // закрытие Statement
-
-        if (description != null) {
-            System.out.println(description);
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql); // выполнение Statement
+            statement.close();      // закрытие Statement
+            if (description != null) {
+                System.out.println(description);
+            }
         }
     }
 
